@@ -5,8 +5,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HelloController {
+    @GetMapping("/user")
+    public String user() {
+            return "user";
+    }
+
+    @GetMapping("/admin")
+    public String admin() {
+            return "admin";
+    }
+
     @GetMapping("/")
-public String index() {
-return "Long bắt đầu học code";
-}
+    public String index() {
+            return "Long bắt đầu học code hihi test";
+    }
+
+
+    
+
 }
