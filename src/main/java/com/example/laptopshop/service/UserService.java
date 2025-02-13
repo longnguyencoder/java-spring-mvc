@@ -30,9 +30,15 @@ public class UserService {
         return this.userRepository.findByEmail(email);
     }
 
+    // lấy ra người dùng theo email
+    public User getUserById(long id) {
+        return this.userRepository.findById(id);
+    }
+
     public User handSaveUser(User user) {
         User demo = this.userRepository.save(user);
         System.out.println(demo);
         return demo;
     }
+
 }

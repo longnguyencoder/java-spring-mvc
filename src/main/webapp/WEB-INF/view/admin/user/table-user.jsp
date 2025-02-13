@@ -23,6 +23,7 @@
                             <div class="d-flex justify-content-between">
                                 <h3>Table Users</h3>
                                 <a href="/admin/user/create" class="btn btn-primary">Create a User</a>
+                                <!-- <a href=""></a> -->
                             </div>
                             <hr />
                             <table class="table table-bordered table-hover">
@@ -43,8 +44,9 @@
 
 
                                             <td>
-                                                <button class="btn btn-success">View</button>
-                                                <button class="btn btn-warning mx-2">Update</button>
+                                                <a href="/admin/user/${user.id}" class="btn btn-success">View</a>
+                                                <a href="/admin/user/update/${user.id}"
+                                                    class="btn btn-warning mx-2">Update</a>
                                                 <button class="btn btn-danger">Delete</button>
                                             </td>
                                             </td>

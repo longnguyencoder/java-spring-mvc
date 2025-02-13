@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,4 +53,20 @@ public class UserController {
         this.userService.handSaveUser(longhoccode);
         return "redirect:/admin/user";
     }
+
+    @RequestMapping("/admin/user/update/{id}") // get
+    public String getUpdateUserPage(Model model) {
+        model.addAttribute("newUser", new User());
+        return "admin/user/update";
+    }
+
+    @RequestMapping("/admin/user/{id}") // get
+    public String getUserDetailPage(Model model, @PathVariable long id) {
+        User user = this.userService.getUserById(id);
+        model.addAttribute("user", user);
+        model.addAttribute("id", id);
+
+        return "admin/user/show";
+    }
+
 }
