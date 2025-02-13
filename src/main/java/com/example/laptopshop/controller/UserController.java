@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.laptopshop.domain.User;
 import com.example.laptopshop.repository.UserRepository;
 import com.example.laptopshop.service.UserService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class UserController {
@@ -55,9 +57,26 @@ public class UserController {
     }
 
     @RequestMapping("/admin/user/update/{id}") // get
-    public String getUpdateUserPage(Model model) {
-        model.addAttribute("newUser", new User());
+    public String getUpdateUserPage(Model model, @PathVariable long id) {
+        User currenUser = this.userService.getUserById(id);
+
+        model.addAttribute("newUser", currenUser);
         return "admin/user/update";
+    }
+
+    @PostMapping("/admin/user/update")
+    public String getUpdateUser(Model model, @ModelAttribute("newUser") User longhoccode) {
+        User currenUser = this.userService.getUserById(longhoccode.getId());
+
+        // check điều kiện
+        if (currenUser != null) {
+            currenUser.setAddress(longhoccode.getAddress());
+            currenUser.setFullname(longhoccode.getFullname());
+            currenUser.setPhone(longhoccode.getPhone());
+            this.userService.handSaveUser(currenUser);
+        }
+        model.addAttribute("newUser", currenUser);
+        return "redirect:/admin/user";
     }
 
     @RequestMapping("/admin/user/{id}") // get
@@ -69,4 +88,18 @@ public class UserController {
         return "admin/user/show";
     }
 
+    // xóa người dùng
+    @GetMapping("/admin/user/delete/{id}")
+    public String getDeleteUserPage(Model model, @PathVariable long id) {
+        // User user = new User();
+        // user.setId(id);
+        model.addAttribute("newUser", new User());
+        return "admin/user/delete";
+    }
+
+    @PostMapping("/admin/user/delete")
+    public String postDeleteUser(Model model, @ModelAttribute("newUser") User longhoccode) {
+        this.userService.deleteUser(longhoccode.getId());
+        return "redirect:/admin/user";
+    }
 }
