@@ -5,15 +5,19 @@ import java.util.List;
 import org.eclipse.tags.shaded.org.apache.regexp.recompile;
 import org.springframework.stereotype.Service;
 
+import com.example.laptopshop.domain.Role;
 import com.example.laptopshop.domain.User;
+import com.example.laptopshop.repository.RoleRepository;
 import com.example.laptopshop.repository.UserRepository;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     public String handleHello() {
@@ -43,5 +47,9 @@ public class UserService {
 
     public void deleteUser(long id) {
         this.userRepository.deleteById(id);
+    }
+
+    public Role getRoleByName(String Name) {
+        return this.roleRepository.findByName(Name);
     }
 }
