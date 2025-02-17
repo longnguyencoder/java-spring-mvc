@@ -1,5 +1,7 @@
 package com.example.laptopshop.domain;
 
+import java.util.List;
+
 import org.hibernate.annotations.ManyToAny;
 
 import jakarta.persistence.Entity;
@@ -22,6 +24,10 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "order")
+    List<OrderDetail> orderDetail;
 
     public long getId() {
         return id;
