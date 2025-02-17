@@ -1,4 +1,4 @@
-package com.example.laptopshop.controller;
+package com.example.laptopshop.controller.admin;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class UserController {
     public String getUserPage(Model model) {
         List<User> users = this.userService.getAllUsers();
         model.addAttribute("users1", users);
-        return "admin/user/table-user";
+        return "admin/user/show";
     }
 
     @RequestMapping("/admin/user/create")
@@ -85,7 +85,7 @@ public class UserController {
         model.addAttribute("user", user);
         model.addAttribute("id", id);
 
-        return "admin/user/show";
+        return "admin/user/detail";
     }
 
     // xóa người dùng
