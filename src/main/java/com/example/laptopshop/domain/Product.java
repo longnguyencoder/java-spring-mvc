@@ -3,6 +3,10 @@ package com.example.laptopshop.domain;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
@@ -13,11 +17,19 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @NotNull(message = "tên sản phẩm không được bỏ trống")
     private String name;
+
+    @DecimalMin(value = "0", message = "giá sản phẩm phải lớn hơn không", inclusive = false)
     private double price;
+
     private String image;
+
+    @NotNull(message = "chi tiết sản phẩm không được bỏ trống")
     private String detailDesc;
+    @NotNull(message = "shortDesc không được bỏ trống")
     private String shortDesc;
+    @Min(value = 1, message = "số lượng cần lớn hơn hoặc bằng 1")
     private long quantity;
     private long sold;
     private String factory;
