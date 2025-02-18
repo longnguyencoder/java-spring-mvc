@@ -6,6 +6,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +20,9 @@ import com.example.laptopshop.domain.User;
 import com.example.laptopshop.repository.UserRepository;
 import com.example.laptopshop.service.UploadService;
 import com.example.laptopshop.service.UserService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -56,9 +61,21 @@ public class UserController {
         return "admin/user/create";
     }
 
-    @PostMapping("/admin/user/create")
-    public String createUserPage(Model model, @ModelAttribute("newUser") User longhoccode,
-            @RequestParam("saveFile") MultipartFile file) {
+    // lưu người dùng
+    @PostMapping(value = "/admin/user/create")
+    public String createUserPage(Model model, @ModelAttribute("newUser") @Valid User longhoccode,
+            BindingResult bindingResult, @RequestParam("saveFile") MultipartFile file) {
+
+        // validation
+        List<FieldError> errors = bindingResult.getFieldErrors();
+        for (FieldError error : errors) {
+            System.out.println(error.getField() + " - " + error.getDefaultMessage());
+        }
+        // validate
+        if (bindingResult.hasErrors()) {
+            return "/admin/user/create";
+        }
+
         System.out.println("run here" + longhoccode);
         String avatar = this.uploadService.handSaveUploadFile(file, "avatar");
         String hashPassword = this.passwordEncoder.encode(longhoccode.getPassword());

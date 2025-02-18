@@ -15,10 +15,15 @@ public class UploadService {
     private final ServletContext servletContext;
 
     public UploadService(ServletContext servletContext) {
+
         this.servletContext = servletContext;
     }
 
     public String handSaveUploadFile(MultipartFile file, String targetFolder) {
+        // nếu không có file ảnh thì không cần lưu
+        if (file.isEmpty()) {
+            return "";
+        }
 
         String rootPath = this.servletContext.getRealPath("/resources/images");
         String finalName = "";
