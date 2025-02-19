@@ -41,7 +41,7 @@ public class UserService {
 
     public User handSaveUser(User user) {
         User demo = this.userRepository.save(user);
-        System.out.println(demo);
+
         return demo;
     }
 

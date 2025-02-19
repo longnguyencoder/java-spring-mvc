@@ -111,6 +111,7 @@ public class UserController {
         return "redirect:/admin/user";
     }
 
+    // xem chi tiết thông tin người dùng
     @RequestMapping("/admin/user/{id}") // get
     public String getUserDetailPage(Model model, @PathVariable long id) {
         User user = this.userService.getUserById(id);

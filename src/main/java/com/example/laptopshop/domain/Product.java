@@ -1,10 +1,12 @@
 package com.example.laptopshop.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jakarta.persistence.GeneratedValue;
@@ -25,7 +27,9 @@ public class Product {
 
     private String image;
 
-    @NotNull(message = "chi tiết sản phẩm không được bỏ trống")
+    @NotNull
+    @NotEmpty(message = "detailDesc không được để trống")
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String detailDesc;
     @NotNull(message = "shortDesc không được bỏ trống")
     private String shortDesc;
