@@ -134,8 +134,8 @@
                                                     </div>
                                                     <div class="mb-3 col-12 col-md-6">
                                                         <label for="avatarFile" class="form-label">Image:</label>
-                                                        <input type="file" id="avatarFile" class="form-control"
-                                                            accept=".png, .jpg, .jpeg" name="saveFile" />
+                                                        <input type="file" id="imageFile" class="form-control"
+                                                            accept=".png, .jpg, .jpeg" name="saveProductFile" />
                                                     </div>
 
                                                     <div class="col-12 col-md-6">

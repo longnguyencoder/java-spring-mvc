@@ -52,7 +52,7 @@ public class ProductController {
 
     @PostMapping(value = "/admin/product/create")
     public String createProductPage(Model model, @ModelAttribute("newProduct") @Valid Product longhoccode,
-            BindingResult bindingResult, @RequestParam("saveFile") MultipartFile file) {
+            BindingResult bindingResult, @RequestParam("saveProductFile") MultipartFile file) {
 
         if (bindingResult.hasErrors()) {
             return "/admin/product/create";
