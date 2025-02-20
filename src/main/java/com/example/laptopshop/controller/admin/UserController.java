@@ -67,10 +67,10 @@ public class UserController {
             BindingResult bindingResult, @RequestParam("saveFile") MultipartFile file) {
 
         // validation
-        List<FieldError> errors = bindingResult.getFieldErrors();
-        for (FieldError error : errors) {
-            System.out.println(error.getField() + " - " + error.getDefaultMessage());
-        }
+        // List<FieldError> errors = bindingResult.getFieldErrors();
+        // for (FieldError error : errors) {
+        // System.out.println(error.getField() + " - " + error.getDefaultMessage());
+        // }
         // validate
         if (bindingResult.hasErrors()) {
             return "/admin/user/create";

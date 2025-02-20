@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.laptopshop.domain.Role;
 import com.example.laptopshop.domain.User;
 import com.example.laptopshop.domain.dto.RegisterDTO;
-import com.example.laptopshop.domain.dto.registerDTO;
+
 import com.example.laptopshop.repository.RoleRepository;
 import com.example.laptopshop.repository.UserRepository;
 
@@ -62,5 +62,10 @@ public class UserService {
         user.setEmail(registerDTO.getEmail());
         user.setPassword(registerDTO.getPassword());
         return user;
+    }
+
+    // check email đã tồn tại hay chưa
+    public boolean checkEmailExist(String email) {
+        return this.userRepository.existsByEmail(email);
     }
 }
