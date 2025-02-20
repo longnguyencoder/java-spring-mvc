@@ -28,6 +28,12 @@ public class OrderDetail {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Override
+    public String toString() {
+        return "OrderDetail [id=" + id + ", quantity=" + quantity + ", price=" + price + ", order=" + order
+                + ", product=" + product + "]";
+    }
+
     public long getId() {
         return id;
     }

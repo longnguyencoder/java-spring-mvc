@@ -93,36 +93,40 @@ public class ProductController {
 
     // update sản phẩm
 
-    @GetMapping("/admin/product/update/{id}") // get
+    @GetMapping("/admin/product/update/{id}")
     public String getUpdateProductPage(Model model, @PathVariable long id) {
-        Optional<Product> currenProduct = this.productService.fetchProductById(id);
-        model.addAttribute("newProduct", currenProduct.get());
+        Optional<Product> currentProduct = this.productService.fetchProductById(id);
+        model.addAttribute("newProduct", currentProduct.get());
         return "admin/product/update";
     }
 
     @PostMapping("/admin/product/update")
-    public String getUpdateProduct(@ModelAttribute("newProduct") @Valid Product longhoccode,
-            BindingResult bindingResult, @RequestParam("saveFile") MultipartFile file) {
+    public String handleUpdateProduct(@ModelAttribute("newProduct") @Valid Product pr,
+            BindingResult newProductBindingResult,
+            @RequestParam("saveFile") MultipartFile file) {
 
         // validate
-        if (bindingResult.hasErrors()) {
+        if (newProductBindingResult.hasErrors()) {
             return "admin/product/update";
         }
-        Product cProduct = this.productService.fetchProductById(longhoccode.getId()).get();
-        if (cProduct != null) {
+
+        Product currentProduct = this.productService.fetchProductById(pr.getId()).get();
+        if (currentProduct != null) {
+            // update new image
             if (!file.isEmpty()) {
                 String img = this.uploadService.handSaveUploadFile(file, "product");
-                cProduct.setImage(img);
+                currentProduct.setImage(img);
             }
-            cProduct.setName(longhoccode.getName());
-            cProduct.setPrice(longhoccode.getPrice());
-            cProduct.setQuantity(longhoccode.getQuantity());
-            cProduct.setDetailDesc(longhoccode.getDetailDesc());
-            cProduct.setShortDesc(longhoccode.getShortDesc());
-            cProduct.setFactory(longhoccode.getFactory());
-            cProduct.setTarget(longhoccode.getTarget());
 
-            this.productService.createProduct(cProduct);
+            currentProduct.setName(pr.getName());
+            currentProduct.setPrice(pr.getPrice());
+            currentProduct.setQuantity(pr.getQuantity());
+            currentProduct.setDetailDesc(pr.getDetailDesc());
+            currentProduct.setShortDesc(pr.getShortDesc());
+            currentProduct.setFactory(pr.getFactory());
+            currentProduct.setTarget(pr.getTarget());
+
+            this.productService.createProduct(currentProduct);
         }
 
         return "redirect:/admin/product";
