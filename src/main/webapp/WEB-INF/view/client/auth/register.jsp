@@ -99,7 +99,7 @@
                                                     </form:form>
                                                 </div>
                                                 <div class="card-footer text-center py-3">
-                                                    <div class="small"><a href="/client/auth/login">Have an account? Go
+                                                    <div class="small"><a href="/login">Have an account? Go
                                                             to
                                                             login</a>
                                                     </div>

@@ -2,8 +2,7 @@ package com.example.laptopshop.domain;
 
 import java.util.List;
 
-import org.hibernate.annotations.ManyToAny;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -26,9 +25,8 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany
-    @JoinColumn(name = "order")
-    List<OrderDetail> orderDetail;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderDetail> orderDetails;
 
     public long getId() {
         return id;
