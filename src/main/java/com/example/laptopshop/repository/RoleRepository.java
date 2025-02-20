@@ -7,7 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import com.example.laptopshop.domain.Role;
-import com.example.laptopshop.domain.User;
 
 // crud 
 @Repository
