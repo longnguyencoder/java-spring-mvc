@@ -1,5 +1,8 @@
 package com.example.laptopshop.domain.dto;
 
+import com.example.laptopshop.service.validator.RegisterChecker;
+
+@RegisterChecker
 public class RegisterDTO {
     private String firstName;
     private String lastName;
