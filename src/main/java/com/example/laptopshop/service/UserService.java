@@ -33,7 +33,7 @@ public class UserService {
 
     // lấy ra người dùng theo email
     public List<User> getAllUserByEmail(String email) {
-        return this.userRepository.findByEmail(email);
+        return this.userRepository.findOneByEmail(email);
     }
 
     // lấy ra người dùng theo email
@@ -68,4 +68,10 @@ public class UserService {
     public boolean checkEmailExist(String email) {
         return this.userRepository.existsByEmail(email);
     }
+
+    public User getUserByEmail(String email) {
+
+        return this.userRepository.findByEmail(email);
+    }
+
 }

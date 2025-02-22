@@ -2,10 +2,15 @@ package com.example.laptopshop.domain.dto;
 
 import com.example.laptopshop.service.validator.RegisterChecker;
 
+import jakarta.validation.constraints.NotNull;
+
 @RegisterChecker
 public class RegisterDTO {
+    @NotNull
     private String firstName;
+    @NotNull
     private String lastName;
+
     private String email;
     private String password;
     private String confirmPassword;

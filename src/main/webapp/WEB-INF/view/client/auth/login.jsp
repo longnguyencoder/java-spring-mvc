@@ -25,14 +25,17 @@
                                 </div>
                                 <div class="card-body">
 
-                                    <form:form method="post" action="/login">
+                                    <form method="post" action="/login">
+                                        <c:if test="${param.error != null}">
+                                            <div class="my-2" style="color: red;">Invalid email or password.</div>
+                                        </c:if>
                                         <div class="form-floating mb-3">
-                                            <form:input class="form-control" id="inputEmail" type="email"
+                                            <input class="form-control" id="inputEmail" type="email"
                                                 placeholder="name@example.com" path="email" name="username" />
                                             <label for="inputEmail">Email address</label>
                                         </div>
                                         <div class="form-floating mb-3">
-                                            <form:input class="form-control" id="inputPassword" type="password"
+                                            <input class="form-control" id="inputPassword" type="password"
                                                 placeholder="Password" path="password" name="password" />
                                             <label for="inputPassword">Password</label>
                                         </div>
@@ -45,7 +48,7 @@
                                                 <button class="btn btn-primary btn-block">Login</button>
                                             </div>
                                         </div>
-                                    </form:form>
+                                    </form>
                                 </div>
                                 <div class="card-footer text-center py-3">
                                     <div class="small"><a href="register">Need an account? Sign up!</a></div>
