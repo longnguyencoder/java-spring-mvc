@@ -18,6 +18,8 @@ import com.example.laptopshop.domain.dto.RegisterDTO;
 import com.example.laptopshop.service.ProductService;
 import com.example.laptopshop.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PostMapping;
