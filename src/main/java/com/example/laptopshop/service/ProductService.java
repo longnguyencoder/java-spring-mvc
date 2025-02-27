@@ -7,12 +7,15 @@ import org.springframework.stereotype.Service;
 
 import com.example.laptopshop.domain.Cart;
 import com.example.laptopshop.domain.CartDetail;
+import com.example.laptopshop.domain.Order;
 import com.example.laptopshop.domain.OrderDetail;
 import com.example.laptopshop.domain.Product;
 import com.example.laptopshop.domain.Role;
 import com.example.laptopshop.domain.User;
 import com.example.laptopshop.repository.CartDetailRepository;
 import com.example.laptopshop.repository.CartRepository;
+import com.example.laptopshop.repository.OrderDetailRepository;
+import com.example.laptopshop.repository.OrderRepository;
 import com.example.laptopshop.repository.ProductRepository;
 import com.example.laptopshop.repository.RoleRepository;
 
@@ -24,14 +27,19 @@ public class ProductService {
     private final CartRepository cartRepository;
     private final CartDetailRepository cartDetailRepository;
     private final UserService userService;
+    private final OrderRepository orderRepository;
+    private final OrderDetailRepository orderDetailRepository;
 
     // tạo mới sản phẩm
     public ProductService(ProductRepository productRepository, CartRepository cartRepository,
-            CartDetailRepository cartDetailRepository, UserService userService) {
+            CartDetailRepository cartDetailRepository, UserService userService, OrderRepository orderRepository,
+            OrderDetailRepository orderDetailRepository) {
         this.productRepository = productRepository;
         this.cartRepository = cartRepository;
         this.cartDetailRepository = cartDetailRepository;
         this.userService = userService;
+        this.orderRepository = orderRepository;
+        this.orderDetailRepository = orderDetailRepository;
     }
 
     public Product createProduct(Product product) {
@@ -190,5 +198,4 @@ public class ProductService {
         }
 
     }
-
 }
