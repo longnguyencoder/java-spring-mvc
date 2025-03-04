@@ -1,5 +1,6 @@
 package com.example.laptopshop.domain;
 
+import java.io.Serializable;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -17,16 +18,20 @@ import jakarta.persistence.GenerationType;
 
 @Entity
 @Table(name = "products")
-public class Product {
+public class Product implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NotNull(message = "tên sản phẩm không được bỏ trống")
+    @NotNull
+    @NotEmpty(message = "Tên sản phẩm không được để trống")
     private String name;
 
-    @DecimalMin(value = "0", message = "giá sản phẩm phải lớn hơn không", inclusive = false)
+    @NotNull
+    @DecimalMin(value = "0", inclusive = false, message = "Price phải lớn hơn 0")
     private double price;
 
     private String image;
@@ -35,10 +40,15 @@ public class Product {
     @NotEmpty(message = "detailDesc không được để trống")
     @Column(columnDefinition = "MEDIUMTEXT")
     private String detailDesc;
-    @NotNull(message = "shortDesc không được bỏ trống")
+
+    @NotNull
+    @NotEmpty(message = "shortDesc không được để trống")
     private String shortDesc;
-    @Min(value = 1, message = "số lượng cần lớn hơn hoặc bằng 1")
+
+    @NotNull
+    @Min(value = 1, message = "Số lượng cần lớn hơn hoặc bằng 1")
     private long quantity;
+
     private long sold;
     private String factory;
     private String target;

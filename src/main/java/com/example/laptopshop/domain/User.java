@@ -1,5 +1,6 @@
 package com.example.laptopshop.domain;
 
+import java.io.Serializable;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -19,39 +20,48 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Email(message = "Email không hợp lệ", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
     @NotNull
+    @Email(message = "Email không hợp lệ", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
     private String email;
 
-    @Size(min = 6, message = "Password phải có tối thiểu 6 ký tự")
     @NotNull
+    @Size(min = 2, message = "Password phải có tối thiểu 2 ký tự")
     private String password;
 
     @NotNull
-    @Size(min = 2, message = "Full Name phải có tối thiểu 2 ký tự")
-    private String fullname;
+    @Size(min = 3, message = "Fullname phải có tối thiểu 3 ký tự")
+    private String fullName;
 
     private String address;
     private String phone;
+
     private String avatar;
 
     // roleId
-    // User nhiều user thuộc 1 role
+    // User many -> to one -> role
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
 
     @OneToMany(mappedBy = "user")
-    List<Order> orders;
+    private List<Order> orders;
 
     @OneToOne(mappedBy = "user")
     private Cart cart;
+
+    @Override
+    public String toString() {
+        return "User [id=" + id + ", email=" + email + ", password=" + password + ", fullName=" + fullName
+                + ", address=" + address + ", phone=" + phone + ", avatar=" + avatar + "]";
+    }
 
     public long getId() {
         return id;
@@ -77,28 +87,12 @@ public class User {
         this.password = password;
     }
 
-    public String getFullname() {
-        return fullname;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getAddress() {
@@ -117,18 +111,28 @@ public class User {
         this.phone = phone;
     }
 
-    @Override
-    public String toString() {
-        return "User [id=" + id + ", email=" + email + ", password=" + password + ", fullname=" + fullname
-                + ", address=" + address + ", phone=" + phone + ", avatar=" + avatar + "]";
-    }
-
     public String getAvatar() {
         return avatar;
     }
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
     public Cart getCart() {

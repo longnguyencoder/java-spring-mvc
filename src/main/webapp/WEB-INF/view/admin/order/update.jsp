@@ -13,7 +13,7 @@
                     <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
                     <meta name="author" content="Hỏi Dân IT" />
                     <title>Update Order - Hỏi Dân IT</title>
-                    <link href="/css/style.css" rel="stylesheet" />
+                    <link href="/css/styles.css" rel="stylesheet" />
 
                     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
                         crossorigin="anonymous"></script>
@@ -61,7 +61,7 @@
                                                     <div class="mb-3 col-12 col-md-6">
                                                         <label class="form-label">User:</label>
                                                         <form:input type="text" class="form-control" disabled="true"
-                                                            path="user.fullname" />
+                                                            path="user.fullName" />
                                                     </div>
 
                                                     <div class="mb-3 col-12 col-md-6">

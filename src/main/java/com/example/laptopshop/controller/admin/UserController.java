@@ -1,7 +1,10 @@
 package com.example.laptopshop.controller.admin;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -32,7 +35,9 @@ public class UserController {
     private final UploadService uploadService;
     private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, UploadService uploadService,
+    public UserController(
+            UploadService uploadService,
+            UserService userService,
             PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.uploadService = uploadService;
@@ -41,89 +46,107 @@ public class UserController {
 
     @RequestMapping("/")
     public String getHomePage(Model model) {
-        List<User> arrUsers = this.userService.getAllUserByEmail("longnguyen16@gmail.com");
+        List<User> arrUsers = this.userService.getAllUsersByEmail("1@gmail.com");
         System.out.println(arrUsers);
-        String test = userService.handleHello();
-        model.addAttribute("eric", test);
+
+        model.addAttribute("eric", "test");
+        model.addAttribute("hoidanit", "from controller with model");
         return "hello";
     }
 
     @RequestMapping("/admin/user")
-    public String getUserPage(Model model) {
-        List<User> users = this.userService.getAllUsers();
+    public String getUserPage(Model model,
+            @RequestParam("page") Optional<String> pageOptional) {
+        int page = 1;
+        try {
+            if (pageOptional.isPresent()) {
+                // convert from String to int
+                page = Integer.parseInt(pageOptional.get());
+            } else {
+                // page = 1
+            }
+        } catch (Exception e) {
+            // page = 1
+            // TODO: handle exception
+        }
+
+        PageRequest pageable = PageRequest.of(page - 1, 1);
+        Page<User> usersPage = this.userService.getAllUsers(pageable);
+        List<User> users = usersPage.getContent();
         model.addAttribute("users1", users);
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", usersPage.getTotalPages());
         return "admin/user/show";
     }
 
-    @RequestMapping("/admin/user/create")
+    @RequestMapping("/admin/user/{id}")
+    public String getUserDetailPage(Model model, @PathVariable long id) {
+        User user = this.userService.getUserById(id);
+        model.addAttribute("user", user);
+        model.addAttribute("id", id);
+        return "admin/user/detail";
+    }
+
+    @GetMapping("/admin/user/create") // GET
     public String getCreateUserPage(Model model) {
         model.addAttribute("newUser", new User());
         return "admin/user/create";
     }
 
-    // lưu người dùng
     @PostMapping(value = "/admin/user/create")
-    public String createUserPage(Model model, @ModelAttribute("newUser") @Valid User longhoccode,
-            BindingResult bindingResult, @RequestParam("saveFile") MultipartFile file) {
+    public String createUserPage(Model model,
+            @ModelAttribute("newUser") @Valid User hoidanit,
+            BindingResult newUserBindingResult,
+            @RequestParam("hoidanitFile") MultipartFile file) {
 
-        // validation
-        // List<FieldError> errors = bindingResult.getFieldErrors();
+        // List<FieldError> errors = newUserBindingResult.getFieldErrors();
         // for (FieldError error : errors) {
-        // System.out.println(error.getField() + " - " + error.getDefaultMessage());
+        // System.out.println(">>>>" + error.getField() + " - " +
+        // error.getDefaultMessage());
         // }
+
         // validate
-        if (bindingResult.hasErrors()) {
-            return "/admin/user/create";
+        if (newUserBindingResult.hasErrors()) {
+            return "admin/user/create";
         }
 
-        System.out.println("run here" + longhoccode);
-        String avatar = this.uploadService.handSaveUploadFile(file, "avatar");
-        String hashPassword = this.passwordEncoder.encode(longhoccode.getPassword());
+        //
+        String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
+        String hashPassword = this.passwordEncoder.encode(hoidanit.getPassword());
 
-        longhoccode.setAvatar(avatar);
-        longhoccode.setPassword(hashPassword);
-        longhoccode.setRole(this.userService.getRoleByName(longhoccode.getRole().getName()));
-
-        this.userService.handSaveUser(longhoccode);
+        hoidanit.setAvatar(avatar);
+        hoidanit.setPassword(hashPassword);
+        hoidanit.setRole(this.userService.getRoleByName(hoidanit.getRole().getName()));
+        // save
+        this.userService.handleSaveUser(hoidanit);
         return "redirect:/admin/user";
     }
 
-    @RequestMapping("/admin/user/update/{id}") // get
+    @RequestMapping("/admin/user/update/{id}") // GET
     public String getUpdateUserPage(Model model, @PathVariable long id) {
-        User currenUser = this.userService.getUserById(id);
-
-        model.addAttribute("newUser", currenUser);
+        User currentUser = this.userService.getUserById(id);
+        model.addAttribute("newUser", currentUser);
         return "admin/user/update";
     }
 
     @PostMapping("/admin/user/update")
-    public String getUpdateUser(Model model, @ModelAttribute("newUser") User longhoccode) {
-        User currenUser = this.userService.getUserById(longhoccode.getId());
+    public String postUpdateUser(Model model, @ModelAttribute("newUser") User hoidanit) {
+        User currentUser = this.userService.getUserById(hoidanit.getId());
+        if (currentUser != null) {
+            currentUser.setAddress(hoidanit.getAddress());
+            currentUser.setFullName(hoidanit.getFullName());
+            currentUser.setPhone(hoidanit.getPhone());
 
-        // check điều kiện
-        if (currenUser != null) {
-            currenUser.setAddress(longhoccode.getAddress());
-            currenUser.setFullname(longhoccode.getFullname());
-            currenUser.setPhone(longhoccode.getPhone());
-            this.userService.handSaveUser(currenUser);
+            // bug here
+            this.userService.handleSaveUser(currentUser);
         }
-        model.addAttribute("newUser", currenUser);
         return "redirect:/admin/user";
     }
 
-    // xem chi tiết thông tin người dùng
-    @RequestMapping("/admin/user/{id}") // get
-    public String getUserDetailPage(Model model, @PathVariable long id) {
-        User user = this.userService.getUserById(id);
-        model.addAttribute("user", user);
-        model.addAttribute("id", id);
-
-        return "admin/user/detail";
-    }
-
-    // xóa người dùng
     @GetMapping("/admin/user/delete/{id}")
     public String getDeleteUserPage(Model model, @PathVariable long id) {
+        model.addAttribute("id", id);
         // User user = new User();
         // user.setId(id);
         model.addAttribute("newUser", new User());
@@ -131,8 +154,8 @@ public class UserController {
     }
 
     @PostMapping("/admin/user/delete")
-    public String postDeleteUser(Model model, @ModelAttribute("newUser") User longhoccode) {
-        this.userService.deleteUser(longhoccode.getId());
+    public String postDeleteUser(Model model, @ModelAttribute("newUser") User eric) {
+        this.userService.deleteAUser(eric.getId());
         return "redirect:/admin/user";
     }
 }

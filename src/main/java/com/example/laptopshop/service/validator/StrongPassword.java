@@ -14,7 +14,7 @@ import jakarta.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface StrongPassword {
-    String message() default "mật khẩu phải tối thiểu 8 kí tự";
+    String message() default "Must be 8 characters long and combination of uppercase letters, lowercase letters, numbers, special characters.";
 
     Class<?>[] groups() default {};
 

@@ -12,17 +12,16 @@ import com.example.laptopshop.domain.User;
 // crud 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    User save(User longhoccode);
+    User save(User eric);
+
+    void deleteById(long id);
 
     List<User> findOneByEmail(String email);
 
     List<User> findAll();
 
-    User findById(long id);
+    User findById(long id); // null
 
-    void deleteById(long id);
-
-    // chechk email
     boolean existsByEmail(String email);
 
     User findByEmail(String email);

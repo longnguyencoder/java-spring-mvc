@@ -13,7 +13,7 @@
                     <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
                     <meta name="author" content="Hỏi Dân IT" />
                     <title>Detail Order - Hỏi Dân IT</title>
-                    <link href="/css/style.css" rel="stylesheet" />
+                    <link href="/css/styles.css" rel="stylesheet" />
 
                     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js"
                         crossorigin="anonymous"></script>

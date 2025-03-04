@@ -10,10 +10,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Constraint(validatedBy = RegisterValidator.class)
-@Target({ ElementType.TYPE })
+@Target({ ElementType.TYPE }) // Adjusted to apply to the class level
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface RegisterChecker {
+public @interface RegisterChecked {
+
     String message() default "User register validation failed";
 
     Class<?>[] groups() default {};

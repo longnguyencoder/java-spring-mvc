@@ -47,48 +47,52 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationSuccessHandler myAuthenticationSuccessHandler() {
+    public AuthenticationSuccessHandler customSuccessHandler() {
         return new CustomSuccessHandler();
     }
 
     @Bean
     public SpringSessionRememberMeServices rememberMeServices() {
         SpringSessionRememberMeServices rememberMeServices = new SpringSessionRememberMeServices();
-
         // optionally customize
         rememberMeServices.setAlwaysRemember(true);
+
         return rememberMeServices;
     }
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // v6. lamda
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .dispatcherTypeMatchers(DispatcherType.FORWARD,
                                 DispatcherType.INCLUDE)
                         .permitAll()
-                        // tất cả đường link mà cho phép người dùng truy cập
-                        .requestMatchers("/", "/login", "/client/**", "/css/**", "/js/**",
-                                "/images/**")
+
+                        .requestMatchers("/", "/login", "/product/**", "/register", "/products/**",
+                                "/client/**", "/css/**", "/js/**", "/images/**")
                         .permitAll()
-                        // role add min
+
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated())
+
                 .sessionManagement((sessionManagement) -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-
                         .invalidSessionUrl("/logout?expired")
-                        .maximumSessions(1) // 1 tài khoản chỉ đăng nhập được 1 thiết bị
+                        .maximumSessions(1)
                         .maxSessionsPreventsLogin(false))
-                .logout(logout -> logout.deleteCookies("JSESSIONID").invalidateHttpSession(true))
-                .rememberMe(r -> r.rememberMeServices(rememberMeServices()))
 
+                .logout(logout -> logout.deleteCookies("JSESSIONID").invalidateHttpSession(true))
+
+                .rememberMe(r -> r.rememberMeServices(rememberMeServices()))
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .failureUrl("/login?error")
-                        .successHandler(myAuthenticationSuccessHandler())
+                        .successHandler(customSuccessHandler())
                         .permitAll())
                 .exceptionHandling(ex -> ex.accessDeniedPage("/access-deny"));
+
         return http.build();
     }
 }

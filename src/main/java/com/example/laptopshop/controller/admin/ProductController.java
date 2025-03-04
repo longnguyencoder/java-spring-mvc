@@ -3,6 +3,8 @@ package com.example.laptopshop.controller.admin;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,19 +29,41 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class ProductController {
-    private final ProductService productService;
     private final UploadService uploadService;
+    private final ProductService productService;
 
-    public ProductController(ProductService productService, UploadService uploadService) {
-        this.productService = productService;
+    public ProductController(
+            UploadService uploadService,
+            ProductService productService) {
         this.uploadService = uploadService;
-
+        this.productService = productService;
     }
 
     @GetMapping("/admin/product")
-    public String getProduct(Model model) {
-        List<Product> product = this.productService.fetchProduct();
-        model.addAttribute("products", product);
+    public String getProduct(
+            Model model,
+            @RequestParam("page") Optional<String> pageOptional) {
+        int page = 1;
+        try {
+            if (pageOptional.isPresent()) {
+                // convert from String to int
+                page = Integer.parseInt(pageOptional.get());
+            } else {
+                // page = 1
+            }
+        } catch (Exception e) {
+            // page = 1
+            // TODO: handle exception
+        }
+
+        PageRequest pageable = PageRequest.of(page - 1, 5);
+        Page<Product> prs = this.productService.fetchProducts(pageable);
+        List<Product> listProducts = prs.getContent();
+        model.addAttribute("products", listProducts);
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", prs.getTotalPages());
+
         return "admin/product/show";
     }
 
@@ -48,50 +72,25 @@ public class ProductController {
         model.addAttribute("newProduct", new Product());
         return "admin/product/create";
     }
-    // lưu sản phẩm
 
-    @PostMapping(value = "/admin/product/create")
-    public String createProductPage(Model model, @ModelAttribute("newProduct") @Valid Product longhoccode,
-            BindingResult bindingResult, @RequestParam("saveProductFile") MultipartFile file) {
-
-        if (bindingResult.hasErrors()) {
-            return "/admin/product/create";
+    @PostMapping("/admin/product/create")
+    public String handleCreateProduct(
+            @ModelAttribute("newProduct") @Valid Product pr,
+            BindingResult newProductBindingResult,
+            @RequestParam("hoidanitFile") MultipartFile file) {
+        // validate
+        if (newProductBindingResult.hasErrors()) {
+            return "admin/product/create";
         }
+
         // upload image
-        String image = this.uploadService.handSaveUploadFile(file, "product");
-        longhoccode.setImage(image);
-        this.productService.createProduct(longhoccode);
+        String image = this.uploadService.handleSaveUploadFile(file, "product");
+        pr.setImage(image);
+
+        this.productService.createProduct(pr);
+
         return "redirect:/admin/product";
     }
-
-    // xóa sản phẩm
-    @GetMapping("/admin/product/delete/{id}")
-    public String getDeleteProductPage(Model model, @PathVariable long id) {
-        // User user = new User();
-        // user.setId(id);
-        model.addAttribute("id", id);
-        model.addAttribute("newProduct", new Product());
-
-        return "admin/product/delete";
-    }
-
-    @PostMapping("/admin/product/delete")
-    public String postDeleteUser(Model model, @ModelAttribute("newUser") User longhoccode) {
-        this.productService.deleteProduct(longhoccode.getId());
-        return "redirect:/admin/product";
-    }
-
-    // xem chi tiết sản phẩm
-    @GetMapping("/admin/product/{id}")
-    public String getProductDetailPage(Model model, @PathVariable long id) {
-        Product product = this.productService.fetchProductById(id).get();
-        model.addAttribute("product", product);
-        model.addAttribute("id", id);
-
-        return "admin/product/detail";
-    }
-
-    // update sản phẩm
 
     @GetMapping("/admin/product/update/{id}")
     public String getUpdateProductPage(Model model, @PathVariable long id) {
@@ -103,7 +102,7 @@ public class ProductController {
     @PostMapping("/admin/product/update")
     public String handleUpdateProduct(@ModelAttribute("newProduct") @Valid Product pr,
             BindingResult newProductBindingResult,
-            @RequestParam("saveFile") MultipartFile file) {
+            @RequestParam("hoidanitFile") MultipartFile file) {
 
         // validate
         if (newProductBindingResult.hasErrors()) {
@@ -114,7 +113,7 @@ public class ProductController {
         if (currentProduct != null) {
             // update new image
             if (!file.isEmpty()) {
-                String img = this.uploadService.handSaveUploadFile(file, "product");
+                String img = this.uploadService.handleSaveUploadFile(file, "product");
                 currentProduct.setImage(img);
             }
 
@@ -130,6 +129,27 @@ public class ProductController {
         }
 
         return "redirect:/admin/product";
+    }
+
+    @GetMapping("/admin/product/delete/{id}")
+    public String getDeleteProductPage(Model model, @PathVariable long id) {
+        model.addAttribute("id", id);
+        model.addAttribute("newProduct", new Product());
+        return "admin/product/delete";
+    }
+
+    @PostMapping("/admin/product/delete")
+    public String postDeleteProduct(Model model, @ModelAttribute("newProduct") Product pr) {
+        this.productService.deleteProduct(pr.getId());
+        return "redirect:/admin/product";
+    }
+
+    @GetMapping("/admin/product/{id}")
+    public String getProductDetailPage(Model model, @PathVariable long id) {
+        Product pr = this.productService.fetchProductById(id).get();
+        model.addAttribute("product", pr);
+        model.addAttribute("id", id);
+        return "admin/product/detail";
     }
 
 }

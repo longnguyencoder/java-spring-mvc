@@ -9,10 +9,10 @@
                 <meta charset="utf-8" />
                 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
                 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-                <meta name="description" content="LaptopShop - Dự án laptopshop" />
-                <meta name="author" content="Laptopshop" />
-                <title>Manager Orders - LaptopShop</title>
-                <link href="/css/style.css" rel="stylesheet" />
+                <meta name="description" content="Hỏi Dân IT - Dự án laptopshop" />
+                <meta name="author" content="Hỏi Dân IT" />
+                <title>Manager Orders - Hỏi Dân IT</title>
+                <link href="/css/styles.css" rel="stylesheet" />
                 <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
             </head>
 
@@ -54,7 +54,7 @@
                                                                 <fmt:formatNumber type="number"
                                                                     value="${order.totalPrice}" /> đ
                                                             </td>
-                                                            <td>${order.user.fullname}</td>
+                                                            <td>${order.user.fullName}</td>
                                                             <td>${order.status}</td>
                                                             <td>
                                                                 <a href="/admin/order/${order.id}"

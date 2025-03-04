@@ -3,12 +3,15 @@ package com.example.laptopshop.service;
 import java.util.List;
 
 import org.eclipse.tags.shaded.org.apache.regexp.recompile;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.laptopshop.domain.Role;
 import com.example.laptopshop.domain.User;
 import com.example.laptopshop.domain.dto.RegisterDTO;
-
+import com.example.laptopshop.repository.OrderRepository;
+import com.example.laptopshop.repository.ProductRepository;
 import com.example.laptopshop.repository.RoleRepository;
 import com.example.laptopshop.repository.UserRepository;
 
@@ -16,38 +19,38 @@ import com.example.laptopshop.repository.UserRepository;
 public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final ProductRepository productRepository;
+    private final OrderRepository orderRepository;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(UserRepository userRepository,
+            RoleRepository roleRepository,
+            ProductRepository productRepository,
+            OrderRepository orderRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.productRepository = productRepository;
+        this.orderRepository = orderRepository;
     }
 
-    public String handleHello() {
-        return "hello service";
+    public Page<User> getAllUsers(Pageable page) {
+        return this.userRepository.findAll(page);
     }
 
-    // lấy ra tất cả người dùng
-    public List<User> getAllUsers() {
-        return this.userRepository.findAll();
-    }
-
-    // lấy ra người dùng theo email
-    public List<User> getAllUserByEmail(String email) {
+    public List<User> getAllUsersByEmail(String email) {
         return this.userRepository.findOneByEmail(email);
     }
 
-    // lấy ra người dùng theo email
+    public User handleSaveUser(User user) {
+        User eric = this.userRepository.save(user);
+        System.out.println(eric);
+        return eric;
+    }
+
     public User getUserById(long id) {
         return this.userRepository.findById(id);
     }
 
-    public User handSaveUser(User user) {
-        User demo = this.userRepository.save(user);
-
-        return demo;
-    }
-
-    public void deleteUser(long id) {
+    public void deleteAUser(long id) {
         this.userRepository.deleteById(id);
     }
 
@@ -55,23 +58,31 @@ public class UserService {
         return this.roleRepository.findByName(name);
     }
 
-    // mapper này dùng để map lastname và firts bên register thành fullname của user
     public User registerDTOtoUser(RegisterDTO registerDTO) {
         User user = new User();
-        user.setFullname(registerDTO.getFirstName() + " " + registerDTO.getLastName());
+        user.setFullName(registerDTO.getFirstName() + " " + registerDTO.getLastName());
         user.setEmail(registerDTO.getEmail());
         user.setPassword(registerDTO.getPassword());
         return user;
     }
 
-    // check email đã tồn tại hay chưa
     public boolean checkEmailExist(String email) {
         return this.userRepository.existsByEmail(email);
     }
 
     public User getUserByEmail(String email) {
-
         return this.userRepository.findByEmail(email);
     }
 
+    public long countUsers() {
+        return this.userRepository.count();
+    }
+
+    public long countProducts() {
+        return this.productRepository.count();
+    }
+
+    public long countOrders() {
+        return this.orderRepository.count();
+    }
 }

@@ -9,7 +9,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 @Service
-public class RegisterValidator implements ConstraintValidator<RegisterChecker, RegisterDTO> {
+public class RegisterValidator implements ConstraintValidator<RegisterChecked, RegisterDTO> {
 
     private final UserService userService;
 
@@ -21,24 +21,25 @@ public class RegisterValidator implements ConstraintValidator<RegisterChecker, R
     public boolean isValid(RegisterDTO user, ConstraintValidatorContext context) {
         boolean valid = true;
 
-        // Kiểm tra nếu các trường mật khẩu khớp nhau
+        // Check if password fields match
         if (!user.getPassword().equals(user.getConfirmPassword())) {
-            context.buildConstraintViolationWithTemplate("PassWord không hợp lệ")
+            context.buildConstraintViolationWithTemplate("Passwords nhập không chính xác")
                     .addPropertyNode("confirmPassword")
                     .addConstraintViolation()
                     .disableDefaultConstraintViolation();
             valid = false;
         }
 
+        // Additional validations can be added here
         // check email
         if (this.userService.checkEmailExist(user.getEmail())) {
-            context.buildConstraintViolationWithTemplate("email đã tồn tại")
+            context.buildConstraintViolationWithTemplate("Email đã tồn tại")
                     .addPropertyNode("email")
                     .addConstraintViolation()
                     .disableDefaultConstraintViolation();
             valid = false;
         }
+
         return valid;
     }
-
 }

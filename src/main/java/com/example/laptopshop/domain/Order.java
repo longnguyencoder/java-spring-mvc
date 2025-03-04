@@ -1,5 +1,6 @@
 package com.example.laptopshop.domain;
 
+import java.io.Serializable;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -14,10 +15,13 @@ import jakarta.persistence.GenerationType;
 
 @Entity
 @Table(name = "orders")
-public class Order {
+public class Order implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private double totalPrice;
 
     private String receiverName;
@@ -27,6 +31,30 @@ public class Order {
     private String receiverPhone;
 
     private String status;
+
+    // user id
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToMany(mappedBy = "order")
+    private List<OrderDetail> orderDetails;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 
     public String getReceiverName() {
         return receiverName;
@@ -76,35 +104,9 @@ public class Order {
         this.orderDetails = orderDetails;
     }
 
-    // user id
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderDetail> orderDetails;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
     @Override
     public String toString() {
-        return "Order [id=" + id + ", totalPrice=" + totalPrice + ", receiverName=" + receiverName
-                + ", receiverAddress=" + receiverAddress + ", receiverPhone=" + receiverPhone + ", status=" + status
-                + ", user=" + user + ", orderDetails=" + orderDetails + "]";
+        return "Order [id=" + id + ", totalPrice=" + totalPrice + "]";
     }
 
 }
